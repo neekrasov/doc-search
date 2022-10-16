@@ -1,6 +1,6 @@
 from redis.asyncio import Redis
 
-redis: Redis = None
+redis: Redis | None = None
 
 
 async def get_redis() -> Redis:

@@ -10,6 +10,7 @@ class Settings(BaseSettings):
     elastic_host: str = "localhost"
     elastic_port: int = 9200
     api_prefix: str = "/api"
+    post_cache_expire_in_seconds: int = 60 * 2
 
     class Config:
         env_file = "dev.env"

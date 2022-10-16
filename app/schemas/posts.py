@@ -1,6 +1,7 @@
 from datetime import datetime
 import orjson
 from pydantic import BaseModel
+from pydantic import validator
 
 
 class PostId(BaseModel):
@@ -13,7 +14,7 @@ class PostIn(BaseModel):
 
 class Post(PostId, PostIn):
     created_date: datetime
-    rubrics: list[str]
+    rubrics: str
 
     class Config:
         json_loads = orjson.loads

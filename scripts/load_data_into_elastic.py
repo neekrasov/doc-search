@@ -13,7 +13,7 @@ def parse_args():
     return parser.parse_args()
 
 
-def csv_to_json(csv_path: str) -> dict:
+def csv_to_json(csv_path: str | pathlib.Path) -> list[dict]:
     json_data = []
     with open(csv_path, encoding="utf-8") as csvf:
         csvReader = csv.DictReader(csvf)
