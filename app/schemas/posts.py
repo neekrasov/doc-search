@@ -3,15 +3,15 @@ import orjson
 from pydantic import BaseModel
 
 
-class DocumentId(BaseModel):
+class PostId(BaseModel):
     id: str
 
 
-class DocumentIn(BaseModel):
+class PostIn(BaseModel):
     text: str
 
 
-class Document(DocumentId, DocumentIn):
+class Post(PostId, PostIn):
     created_date: datetime
     rubrics: list[str]
 
