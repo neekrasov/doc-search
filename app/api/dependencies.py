@@ -1,14 +1,19 @@
-from functools import lru_cache
-
 from redis.asyncio import Redis
 from elasticsearch import AsyncElasticsearch
 from fastapi import Depends
-from db.elastic import get_elastic
-from db.redis import get_redis
 from services.posts import PostService
+from elasticsearch import AsyncElasticsearch
+from redis.asyncio import Redis
 
 
-@lru_cache()
+async def get_redis() -> Redis:
+    raise NotImplementedError
+
+
+async def get_elastic() -> AsyncElasticsearch:
+    raise NotImplementedError
+
+
 def get_post_service(
     redis: Redis = Depends(get_redis),
     elastic: AsyncElasticsearch = Depends(get_elastic),
