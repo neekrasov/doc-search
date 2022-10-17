@@ -1,4 +1,5 @@
 import argparse
+from time import sleep
 import csv
 import pathlib
 from elasticsearch import Elasticsearch
@@ -8,6 +9,9 @@ def parse_args():
     parser = argparse.ArgumentParser(description="Load test data into elasticsearch")
     parser.add_argument(
         "--host", help="Elasticsearch host and port", default="http://localhost:9200"
+    )
+    parser.add_argument(
+        "--path", help="Path to csv file", default="sources/posts.csv"
     )
 
     return parser.parse_args()
@@ -24,6 +28,9 @@ def csv_to_json(csv_path: str | pathlib.Path) -> list[dict]:
 
 def load_data_elastic(json_data, host):
     es = Elasticsearch(host)
+    while not es.ping():
+        print("Waiting for elasticsearch to start...")
+        sleep(10)
     if es.indices.exists(index="posts"):
         print("INDEX ALREADY EXISTS")
     else:
@@ -45,10 +52,8 @@ def load_data_elastic(json_data, host):
 
 def main():
     args = parse_args()
-
-    csv_path = pathlib.Path.cwd() / "sources" / "posts.csv"
-
-    json_data = csv_to_json(csv_path)
+    
+    json_data = csv_to_json(args.path)
 
     load_data_elastic(json_data, args.host)
 

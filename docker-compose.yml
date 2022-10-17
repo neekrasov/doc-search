@@ -1,0 +1,49 @@
+version: '3.8'
+
+services:
+  web:
+    container_name: web
+    build: ./
+    command: bash ../scripts/prestart.sh
+    env_file: ./dev.env
+    ports:
+      - 8000:8000
+    depends_on:
+      - redis
+      - kibana
+
+  redis:
+    container_name: redis
+    image: redis:7
+    expose:
+      - 6379
+
+  elasticsearch:
+    image: elasticsearch:7.17.6
+    container_name: elasticsearch
+    environment:
+      - xpack.security.enabled=false # disable security
+      - discovery.type=single-node # (block multiple-node cluster)
+    deploy:
+      resources:
+        limits:
+          cpus: '2'
+          memory: 3G
+    volumes:
+      - elasticsearch-data:/usr/share/elasticsearch/data
+    ports:
+      - 9200:9200
+
+  kibana:
+    container_name: kibana
+    image: kibana:7.4.0
+    environment:
+      - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
+    ports:
+      - 5601:5601
+    depends_on:
+      - elasticsearch
+
+volumes:
+  elasticsearch-data:
+    driver: local

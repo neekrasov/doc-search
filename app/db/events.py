@@ -18,11 +18,7 @@ async def startup():
     elastic.es = AsyncElasticsearch(
         hosts=[f"http://{settings.elastic_host}:{settings.elastic_port}"]
     )
-    assert await elastic.es.ping()
     logging.info("Elasticsearch: connection established")
-
-    assert await elastic.es.indices.exists(index="posts"), "Posts index does not exist"
-    logging.info("Elasticsearch: Index 'posts' ready")
 
 
 async def shutdown():
