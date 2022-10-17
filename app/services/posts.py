@@ -30,6 +30,7 @@ class PostService:
             await self.elastic.delete(index="posts", id=post_id)
         except elasticsearch.NotFoundError:
             return False
+        return True
 
     async def get_post_by_id(self, post_id: str) -> Post | None:
         post = await self._get_post_from_cache(post_id)
@@ -57,6 +58,7 @@ class PostService:
             post = await self.elastic.get(index="posts", id=post_id)
         except elasticsearch.NotFoundError:
             return None
+
         return Post(id=post_id, **post["_source"])
 
     async def _get_posts_from_cache(self, search_text: str) -> list[Post] | None:

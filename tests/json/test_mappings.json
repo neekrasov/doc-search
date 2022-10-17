@@ -1,0 +1,7 @@
+{
+    "properties": {
+        "text": {"type": "text"},
+        "created_date": {"type": "date", "format": "yyyy-MM-dd HH:mm:ss", "store": false, "index": false},
+        "rubrics": {"type": "text", "store": false, "index": false}
+    }
+}

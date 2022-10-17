@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Response
 from api.dependencies import get_post_service
 from services.posts import PostService
 from schemas.posts import Post, PostIn
@@ -25,6 +25,7 @@ async def delete_post(
     status = await post_service.delete_post(post_id)
     if not status:
         raise HTTPException(status_code=404, detail="Post not found")
+    return Response(status_code=200)
 
 
 @router.get("/post/{post_id}", response_model=Post)

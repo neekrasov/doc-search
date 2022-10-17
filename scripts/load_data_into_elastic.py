@@ -10,9 +10,7 @@ def parse_args():
     parser.add_argument(
         "--host", help="Elasticsearch host and port", default="http://localhost:9200"
     )
-    parser.add_argument(
-        "--path", help="Path to csv file", default="sources/posts.csv"
-    )
+    parser.add_argument("--path", help="Path to csv file", default="sources/posts.csv")
 
     return parser.parse_args()
 
@@ -39,8 +37,13 @@ def load_data_elastic(json_data, host):
             mappings={
                 "properties": {
                     "text": {"type": "text"},
-                    "created_date": {"type": "date", "format": "yyyy-MM-dd HH:mm:ss", "store": False, "index": False},
-                    "rubrics": {"type": "text", "store": False, "index": False },
+                    "created_date": {
+                        "type": "date",
+                        "format": "yyyy-MM-dd HH:mm:ss",
+                        "store": False,
+                        "index": False,
+                    },
+                    "rubrics": {"type": "text", "store": False, "index": False},
                 }
             },
         )
@@ -52,7 +55,7 @@ def load_data_elastic(json_data, host):
 
 def main():
     args = parse_args()
-    
+
     json_data = csv_to_json(args.path)
 
     load_data_elastic(json_data, args.host)

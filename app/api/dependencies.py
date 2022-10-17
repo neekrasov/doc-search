@@ -1,3 +1,4 @@
+from functools import cache
 from redis.asyncio import Redis
 from elasticsearch import AsyncElasticsearch
 from fastapi import Depends
@@ -14,6 +15,7 @@ async def get_elastic() -> AsyncElasticsearch:
     raise NotImplementedError
 
 
+@cache
 def get_post_service(
     redis: Redis = Depends(get_redis),
     elastic: AsyncElasticsearch = Depends(get_elastic),
