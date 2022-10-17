@@ -16,13 +16,14 @@ class PostService:
         self.redis = redis
         self.elastic = elastic
 
-    async def search_posts(self, search_text: str) -> list[Post] | None:
-        posts = await self._get_posts_from_cache(search_text)
+    async def search_posts(self, search_text: str, size: int) -> list[Post] | None:
+        cache_id = f"Search__{search_text}__{size}"
+        posts = await self._get_posts_from_cache(cache_id)
         if not posts:
-            posts = await self._search_posts_in_elastic(search_text)
+            posts = await self._search_posts_in_elastic(search_text=search_text, size = size)
         if not posts:
             return None
-        await self._put_posts_to_cache(search_text, posts)
+        await self._put_posts_to_cache(cache_id, posts)
         return posts
 
     async def delete_post(self, post_id: str):
@@ -41,12 +42,12 @@ class PostService:
         await self._put_post_to_cache(post)
         return post
 
-    async def _search_posts_in_elastic(self, search_text: str) -> list[Post] | None:
+    async def _search_posts_in_elastic(self, search_text: str, size: int) -> list[Post] | None:
         posts = await self.elastic.search(
             index="posts",
             query={"match": {"text": search_text}},
             sort="created_date:desc",
-            size=10,
+            size=size,
         )
         return [
             Post(id=post["_id"], **post["_source"])

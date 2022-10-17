@@ -11,13 +11,13 @@ async def search_posts(
     post: PostIn,
     post_service: PostService = Depends(get_post_service),
 ):
-    posts = await post_service.search_posts(post.text)
+    posts = await post_service.search_posts(search_text=post.text, size=20)
     if not posts:
         raise HTTPException(status_code=404, detail="Posts not found")
     return posts
 
 
-@router.delete("/delete/{post_id}")
+@router.delete("/post/{post_id}")
 async def delete_post(
     post_id: str,
     post_service: PostService = Depends(get_post_service),
